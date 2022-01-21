@@ -1,0 +1,23 @@
+{
+  "name": "org-management-facilitor",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OneGHEOrg/org-management-facilitor.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OneGHEOrg/org-management-facilitor/issues"
+  },
+  "homepage": "https://github.com/OneGHEOrg/org-management-facilitor#readme",
+  "dependencies": {
+    "@octokit/app": "^12.0.5",
+    "dotenv": "^14.2.0"
+  }
+}
