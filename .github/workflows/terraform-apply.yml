@@ -1,0 +1,45 @@
+on:
+  push:
+    paths-ignore:
+      - "**/*.md"
+    branches:
+      - main
+  workflow_dispatch:
+
+name: Terraform apply
+
+concurrency:
+  group: github-org-protection-service-terraform
+
+jobs:
+  infra-deploy:
+    name: Terraform apply
+    runs-on:
+      - ubuntu-latest
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v2
+
+      - name: Prepare secrets
+        shell: bash
+        working-directory: tf
+        run: |
+          echo $TF_SECRETS | base64 -d > secrets.auto.tfvars
+          echo $TF_BACKEND | base64 -d > backend.tfvars
+          cat backend.tfvars
+        env:
+          TF_SECRETS: ${{ secrets.TF_SECRETS }}
+          TF_BACKEND: ${{ secrets.TF_BACKEND }}
+
+      - name: Terraform apply
+        run: |
+          set -o pipefail
+          terraform init
+          terraform apply -auto-approve
+        id: apply
+        working-directory: tf
+        env:
+          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
