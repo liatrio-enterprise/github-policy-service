@@ -28,8 +28,8 @@ jobs:
         shell: bash
         working-directory: tf
         run: |
-          echo $TF_SECRETS > secrets.auto.tfvars
-          echo $TF_BACKEND > backend.tfvars
+          echo $TF_SECRETS | base64 -d > secrets.auto.tfvars
+          echo $TF_BACKEND | base64 -d > backend.tfvars
           cat backend.tfvars
         env:
             TF_SECRETS: ${{ secrets.TF_SECRETS }}
