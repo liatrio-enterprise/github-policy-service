@@ -1,15 +1,16 @@
 on:
-  pull_request:
+  push:
     branches: ['main']
 
 env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{ github.repository }}
 
-name: Build and Push Image
+name: Deploy
 
 jobs:
   build:
+    name: Build and Push Image
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
