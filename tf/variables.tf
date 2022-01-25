@@ -15,8 +15,26 @@ variable "github_webhook_secret" {
   sensitive   = true
 }
 
-variable "github_enforcer_pat" {
+variable "gh_app_id" {
   type        = string
-  description = "PAT for the protection service to use to enforce protections"
+  description = "GitHub app ID"
+  sensitive   = true
+}
+
+variable "gh_app_private_key" {
+  type        = string
+  description = "GitHub app private key"
+  sensitive   = true
+}
+
+variable "gh_app_client_id" {
+  type        = string
+  description = "GitHub app client ID"
+  sensitive   = true
+}
+
+variable "gh_app_client_secret" {
+  type        = string
+  description = "GitHub app client secret"
   sensitive   = true
 }
