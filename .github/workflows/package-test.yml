@@ -1,0 +1,15 @@
+on:
+  registry_package:
+    types:
+      - published
+
+name: testing package event
+
+jobs:
+  package: 
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v5
+        with:
+          script: |
+            console.log(context.event)
