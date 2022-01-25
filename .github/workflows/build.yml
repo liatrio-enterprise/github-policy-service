@@ -2,7 +2,7 @@ on:
   pull_request:
     branches: ['main']
 
-name: Build
+name: Build Image
 
 jobs:
   build:
