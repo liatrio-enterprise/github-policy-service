@@ -1,1 +1,1 @@
-# org-management-facilitor
+# GitHub Org Protection Service
