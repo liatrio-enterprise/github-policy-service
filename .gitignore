@@ -1,9 +1,10 @@
-**/.terraform
+.terraform
 terraform.tfstate
 .tfstate
 *.tfstate
 *.tfstate.*
 *.auto.tfvars
+*.tfvars
 
 .idea/
 local.settings.json
