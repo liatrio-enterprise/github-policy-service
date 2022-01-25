@@ -34,7 +34,7 @@ jobs:
       - name: Terraform apply
         run: |
           set -o pipefail
-          terraform init
+          terraform init -backend-config=backend.tfvars
           terraform apply -auto-approve
         id: apply
         working-directory: tf
