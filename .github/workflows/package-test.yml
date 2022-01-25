@@ -1,8 +1,6 @@
 on:
   registry_package:
-    types:
-      - published
-      - updated
+  release:
 
 name: testing package event
 
