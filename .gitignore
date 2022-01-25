@@ -5,6 +5,7 @@ terraform.tfstate
 *.tfstate.*
 *.auto.tfvars
 *.tfvars
+.env
 
 .idea/
 local.settings.json

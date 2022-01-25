@@ -7,9 +7,9 @@ RUN yarn --production
 
 FROM gcr.io/distroless/nodejs:16
 
-LABEL org.opencontainers.image.source=https://github.com/liatrio/org-management-facilitor
+LABEL org.opencontainers.image.source=https://github.com/liatrio/github-org-policy-service
 
 COPY --from=build /usr/src/app /usr/src/app
 WORKDIR /usr/src/app
 
-CMD ["src/app.js"]
+CMD ["app.js"]
