@@ -2,6 +2,7 @@ on:
   registry_package:
     types:
       - published
+      - updated
 
 name: testing package event
 
