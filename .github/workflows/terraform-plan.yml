@@ -30,6 +30,7 @@ jobs:
         run: |
           echo $TF_SECRETS > secrets.auto.tfvars
           echo $TF_BACKEND > backend.tfvars
+          cat backend.tfvars
         env:
             TF_SECRETS: ${{ secrets.TF_SECRETS }}
             TF_BACKEND: ${{ secrets.TF_BACKEND }}
