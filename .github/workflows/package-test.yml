@@ -2,7 +2,7 @@ on:
   registry_package:
   release:
 
-name: testing package event - yay
+name: testing package event
 
 jobs:
   package: 
