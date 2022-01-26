@@ -31,6 +31,10 @@ jobs:
           push: true
           tags: ${{ env.TAG }}
 
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-container-action@v1
         id: fa
