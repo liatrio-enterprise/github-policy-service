@@ -4,7 +4,7 @@ variable "location" {
   default     = "Central US"
 }
 
-variable "function_app_name" {
+variable "app_service_name" {
   type        = string
   description = "Name of the function app to configure"
 }

@@ -58,7 +58,7 @@ expressApp.get('/healthcheck', (req, res) => {
     res.send('ok')
 })
 
-const port = process.env.PORT || 80;
+const port = process.env.PORT || 3000;
 
 console.log(process.env)
 
