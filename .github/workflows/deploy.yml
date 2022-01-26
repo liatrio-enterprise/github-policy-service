@@ -4,7 +4,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  TAG: ${{ env.REGISTRY }}/${{ github.repository }}:${{ github.sha }}
+  TAG: "ghcr.io/${{ github.repository }}:${{ github.sha }}"
   IMAGE_NAME: ${{ github.repository }}
 
 name: Deploy
