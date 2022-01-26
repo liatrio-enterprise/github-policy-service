@@ -13,7 +13,7 @@ const app = new App({
         clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
     },
     webhooks: {
-        secret: process.env.GITHUB_SECRET,
+        secret: process.env.WEBHOOK_SECRET,
     },
 });
 
