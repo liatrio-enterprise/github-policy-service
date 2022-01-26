@@ -5,11 +5,11 @@ COPY . .
 
 RUN yarn --production
 
-FROM gcr.io/distroless/nodejs:16
+FROM mcr.microsoft.com/azure-functions/node:4-node16
 
 LABEL org.opencontainers.image.source=https://github.com/liatrio/github-org-policy-service
 
 COPY --from=build /usr/src/app /usr/src/app
 WORKDIR /usr/src/app
 
-CMD ["app.js"]
+ENTRYPOINT ["node", "app.js"]
