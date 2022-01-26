@@ -33,7 +33,7 @@ resource "azurerm_function_app" "branch_protection_service" {
   storage_account_access_key = azurerm_storage_account.branch_protection_service.primary_access_key
 
   site_config {
-    health_check_path = "/"
+    health_check_path = "/healthcheck"
   }
 
   os_type = "linux"

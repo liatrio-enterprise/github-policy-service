@@ -1,6 +1,8 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
 require('dotenv').config()
+import express from "express";
 
+const expressApp = express();
 const app = new App({
     appId: process.env.APP_ID,
     privateKey: process.env.PRIVATE_KEY,
@@ -12,10 +14,6 @@ const app = new App({
         secret: "secret",
     },
 });
-
-// app.webhooks.onAny(event => {
-//     console.log(event);
-// })
 
 app.webhooks.on("repository.created", async ({ octokit, payload }) => {
 
@@ -46,4 +44,16 @@ app.webhooks.on("repository.created", async ({ octokit, payload }) => {
 
 });
 
-require("http").createServer(createNodeMiddleware(app)).listen(3000);
+expressApp.use(createNodeMiddleware(app));
+
+expressApp.get('/', (req, res) => {
+    res.send('ok')
+})
+
+expressApp.get('/healthcheck', (req, res) => {
+    res.send('ok')
+})
+
+expressApp.listen(3000, () => {
+    console.log(`Example app listening at http://localhost:3000`);
+});
