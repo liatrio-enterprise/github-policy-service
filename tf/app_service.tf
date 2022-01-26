@@ -34,6 +34,11 @@ resource "azurerm_app_service" "branch_protection_service" {
     type = "SystemAssigned"
   }
 
+  site_config {
+    always_on = true
+    acr_use_managed_identity_credentials = true
+  }
+
   app_settings = {
     WEBSITE_PORT : 3000
     WEBHOOK_SECRET : var.github_webhook_secret
