@@ -32,12 +32,8 @@ resource "azurerm_function_app" "branch_protection_service" {
   storage_account_name       = azurerm_storage_account.branch_protection_service.name
   storage_account_access_key = azurerm_storage_account.branch_protection_service.primary_access_key
 
-  # NOTE: If deploying app via Terraform you would uncomment this
-  # site_config {
-  #   linux_fx_version = "DOCKER|azuredemoshared.azurecr.io/${var.image_name}:${var.image_version}"
-  # }
   site_config {
-    linux_fx_version = "node|14"
+    health_check_path = "/healthcheck"
   }
 
   os_type = "linux"
@@ -45,8 +41,6 @@ resource "azurerm_function_app" "branch_protection_service" {
 
   app_settings = {
     WEBHOOK_SECRET : var.github_webhook_secret
-    FUNCTIONS_WORKER_RUNTIME : "node"
-    WEBSITE_RUN_FROM_PACKAGE : ""
     GITHUB_APP_ID : var.gh_app_id
     GITHUB_APP_PRIVATE_KEY : var.gh_app_private_key
     GITHUB_APP_CLIENT_ID : var.gh_app_client_id
