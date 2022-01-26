@@ -6,7 +6,7 @@ on:
       - main
   workflow_dispatch:
 
-name: Terraform apply
+name: Terraform Apply
 
 concurrency:
   group: github-org-protection-service-terraform
