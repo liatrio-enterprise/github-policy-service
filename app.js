@@ -3,6 +3,7 @@ require('dotenv').config()
 import express from "express";
 
 const expressApp = express();
+
 const app = new App({
     appId: process.env.APP_ID,
     privateKey: process.env.PRIVATE_KEY,
@@ -54,6 +55,6 @@ expressApp.get('/healthcheck', (req, res) => {
     res.send('ok')
 })
 
-expressApp.listen(3000, () => {
-    console.log(`Example app listening at http://localhost:3000`);
-});
+const port = process.env.PORT || 3000;
+
+expressApp.listen(port, '0.0.0.0');
