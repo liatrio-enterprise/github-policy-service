@@ -51,6 +51,8 @@ resource "azurerm_function_app" "branch_protection_service" {
     ignore_changes = [
       app_settings["WEBSITE_RUN_FROM_PACKAGE"],
       app_settings["WEBSITE_ENABLE_SYNC_UPDATE_SITE"],
+      app_settings["APPINSIGHTS_INSTRUMENTATIONKEY"],
+      app_settings["APPLICATIONINSIGHTS_CONNECTION_STRING"],
     ]
   }
 }
