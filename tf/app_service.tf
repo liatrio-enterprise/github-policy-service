@@ -12,47 +12,34 @@ resource "azurerm_storage_account" "branch_protection_service" {
 }
 
 resource "azurerm_app_service_plan" "branch_protection_service" {
-  name                = var.function_app_name
+  name                = var.app_service_name
   location            = azurerm_resource_group.github_org_protection_service.location
   resource_group_name = azurerm_resource_group.github_org_protection_service.name
-  kind                = "FunctionApp"
+  kind                = "Linux"
   reserved            = true
 
   sku {
-    tier = "Dynamic"
-    size = "Y1"
+    tier = "Basic"
+    size = "B1"
   }
 }
 
-resource "azurerm_function_app" "branch_protection_service" {
-  name                       = var.function_app_name
-  location                   = azurerm_resource_group.github_org_protection_service.location
-  resource_group_name        = azurerm_resource_group.github_org_protection_service.name
-  app_service_plan_id        = azurerm_app_service_plan.branch_protection_service.id
-  storage_account_name       = azurerm_storage_account.branch_protection_service.name
-  storage_account_access_key = azurerm_storage_account.branch_protection_service.primary_access_key
+resource "azurerm_app_service" "branch_protection_service" {
+  app_service_plan_id = azurerm_app_service_plan.branch_protection_service.id
+  location            = azurerm_resource_group.github_org_protection_service.location
+  name                = var.app_service_name
+  resource_group_name = azurerm_resource_group.github_org_protection_service.name
 
-  site_config {
-    health_check_path = "/healthcheck"
+  identity {
+    type = "SystemAssigned"
   }
 
-  os_type = "linux"
-  version = "~3"
-
   app_settings = {
+    WEBSITE_PORT : 3000
     WEBHOOK_SECRET : var.github_webhook_secret
     GITHUB_APP_ID : var.gh_app_id
     GITHUB_APP_PRIVATE_KEY : var.gh_app_private_key
     GITHUB_APP_CLIENT_ID : var.gh_app_client_id
     GITHUB_APP_CLIENT_SECRET : var.gh_app_client_secret
-  }
-
-  lifecycle {
-    ignore_changes = [
-      app_settings["WEBSITE_RUN_FROM_PACKAGE"],
-      app_settings["WEBSITE_ENABLE_SYNC_UPDATE_SITE"],
-      app_settings["APPINSIGHTS_INSTRUMENTATIONKEY"],
-      app_settings["APPLICATIONINSIGHTS_CONNECTION_STRING"],
-    ]
   }
 }
