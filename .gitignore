@@ -11,3 +11,5 @@ terraform.tfstate
 local.settings.json
 node_modules
 dist
+
+package-lock.json
