@@ -24,6 +24,8 @@ const protection_events = [
 ]
 
 app.webhooks.on(protection_events, async ({ octokit, payload }) => {
+    console.log(payload);
+
     if(payload.sender.type !== 'Bot') {
         await octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
@@ -68,4 +70,12 @@ const port = process.env.PORT || 3000;
 
 console.log(process.env)
 
+expressApp.use(function (err, req, res, next) {
+    console.error(err);
+    console.log(err.stack);
+    next(err)
+})
+
 expressApp.listen(port, '0.0.0.0');
+
+
