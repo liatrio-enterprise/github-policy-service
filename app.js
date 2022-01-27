@@ -1,4 +1,4 @@
-const { App, createNodeMiddleware } = require("@octokit/app");
+const {App, createNodeMiddleware} = require("@octokit/app");
 const morgan = require("morgan");
 const express = require("express");
 const expressApp = express();
@@ -6,8 +6,7 @@ const expressApp = express();
 expressApp.use(morgan('common'));
 expressApp.use(express.json())
 expressApp.use((req, res, next) => {
-    console.log("Headers: " + req.headers);
-    console.log("Body: " + req.body)
+    console.log(JSON.stringify({ headers: req.headers, body: req.body }));
     next();
 })
 
@@ -32,7 +31,7 @@ const protection_events = [
     "branch_protection_rule.deleted"
 ]
 
-app.webhooks.on(protection_events, async ({ octokit, payload }) => {
+app.webhooks.on(protection_events, async ({octokit, payload}) => {
     console.log(payload);
 
     if (payload.sender.type !== 'Bot') {
