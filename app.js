@@ -7,7 +7,6 @@ expressApp.use(morgan('common'));
 
 expressApp.use((req, res, next) => {
     console.log(req.headers);
-    console.log(res);
     next();
 })
 
@@ -97,8 +96,6 @@ expressApp.get('/healthcheck', (req, res) => {
 const port = process.env.PORT || 3000;
 
 console.log(process.env)
-
-expressApp.use(express.json())
 
 expressApp.listen(port, '0.0.0.0');
 

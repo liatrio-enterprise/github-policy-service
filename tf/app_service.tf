@@ -55,6 +55,7 @@ resource "azurerm_app_service" "branch_protection_service" {
   }
 
   app_settings = {
+    DEBUG : "*"
     WEBSITE_PORT : 3000
     WEBHOOK_SECRET : var.github_webhook_secret
     GITHUB_APP_ID : var.gh_app_id
