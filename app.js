@@ -5,6 +5,12 @@ const expressApp = express();
 
 expressApp.use(morgan('common'));
 
+expressApp.use((req, res, next) => {
+    console.log(req.headers);
+    console.log(res);
+    next();
+})
+
 require('dotenv').config()
 
 const app = new App({
@@ -56,7 +62,7 @@ app.webhooks.on(protection_events, async ({ octokit, payload }) => {
 });
 
 function onUnhandledRequest(request, response) {
-    response.writeHead(400, {
+    response.writeHead(500, {
         "content-type": "application/json",
     });
     console.log(JSON.stringify({
@@ -73,7 +79,8 @@ expressApp.use(createNodeMiddleware(app, {
     onUnhandledRequest,
     log: {
         debug: console.log,
-        info: console.log
+        info: console.log,
+        error: console.log
     }
 }));
 
