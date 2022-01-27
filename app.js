@@ -3,6 +3,8 @@ const morgan = require("morgan");
 const express = require("express");
 const expressApp = express();
 
+expressApp.use(morgan('common'));
+
 require('dotenv').config()
 
 const app = new App({
@@ -53,8 +55,6 @@ app.webhooks.on(protection_events, async ({ octokit, payload }) => {
     }
 });
 
-require("http").createServer(createNodeMiddleware(app)).listen(3001);
-
 expressApp.use(createNodeMiddleware(app));
 
 expressApp.get('/', (req, res) => {
@@ -71,7 +71,7 @@ const port = process.env.PORT || 3000;
 
 console.log(process.env)
 
-expressApp.use(morgan('common'));
+expressApp.use(express.json())
 
 expressApp.listen(port, '0.0.0.0');
 
