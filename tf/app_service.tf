@@ -37,6 +37,21 @@ resource "azurerm_app_service" "branch_protection_service" {
   site_config {
     always_on                            = true
     acr_use_managed_identity_credentials = true
+    health_check_path                    = "/healthcheck"
+  }
+
+  logs {
+    failed_request_tracing_enabled  = true
+    detailed_error_messages_enabled = true
+    http_logs {
+      file_system {
+        retention_in_days = 0
+        retention_in_mb   = 35
+      }
+    }
+    application_logs {
+      file_system_level = "Information"
+    }
   }
 
   app_settings = {

@@ -1,4 +1,5 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
+const morgan = require("morgan");
 const express = require("express");
 const expressApp = express();
 
@@ -70,11 +71,7 @@ const port = process.env.PORT || 3000;
 
 console.log(process.env)
 
-expressApp.use(function (err, req, res, next) {
-    console.error(err);
-    console.log(err.stack);
-    next(err)
-})
+expressApp.use(morgan('common'));
 
 expressApp.listen(port, '0.0.0.0');
 
