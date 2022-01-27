@@ -35,7 +35,7 @@ resource "azurerm_app_service" "branch_protection_service" {
   }
 
   site_config {
-    always_on = true
+    always_on                            = true
     acr_use_managed_identity_credentials = true
   }
 
