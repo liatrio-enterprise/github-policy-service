@@ -17,7 +17,14 @@ const app = new App({
     },
 });
 
-app.webhooks.on("repository.created", async ({ octokit, payload }) => {
+const org_events = [
+    "repository.created",
+    "branch_protection_rule.created",
+    "branch_protection_rule.edited",
+    "branch_protection_rule.deleted"
+]
+
+app.webhooks.on(org_events, async ({ octokit, payload }) => {
 
     // console.log(payload);
     // console.log(`Configuring branch protection for repo ${payload.repository.name}`)
