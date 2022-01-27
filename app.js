@@ -4,9 +4,10 @@ const express = require("express");
 const expressApp = express();
 
 expressApp.use(morgan('common'));
-
+expressApp.use(express.json())
 expressApp.use((req, res, next) => {
-    console.log(req.headers);
+    console.log("Headers: " + req.headers);
+    console.log("Body: " + req.body)
     next();
 })
 
