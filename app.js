@@ -1,10 +1,8 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
-require('dotenv').config()
-
 const express = require("express");
-const { isObject } = require("util");
-
 const expressApp = express();
+
+require('dotenv').config()
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -13,24 +11,19 @@ const app = new App({
         clientId: process.env.GITHUB_APP_CLIENT_ID,
         clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
     },
-    // webhooks: {
-    //     secret: "secret",
-    // },
     webhooks: {
         secret: process.env.WEBHOOK_SECRET,
     },
 });
 
-const org_events = [
+const protection_events = [
     "repository.created",
     "branch_protection_rule.created",
     "branch_protection_rule.edited",
     "branch_protection_rule.deleted"
 ]
 
-app.webhooks.on(org_events, async ({ octokit, payload }) => {
-    // console.log(payload);
-    // console.log(`Configuring branch protection for repo ${payload.repository.name}`)
+app.webhooks.on(protection_events, async ({ octokit, payload }) => {
     if(payload.sender.type !== 'Bot') {
         await octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
