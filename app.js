@@ -1,4 +1,4 @@
-const { App, createNodeMiddleware } = require("@octokit/app");
+const {App, createNodeMiddleware} = require("@octokit/app");
 const morgan = require("morgan");
 const express = require("express");
 const expressApp = express();
@@ -26,10 +26,10 @@ const protection_events = [
     "branch_protection_rule.deleted"
 ]
 
-app.webhooks.on(protection_events, async ({ octokit, payload }) => {
+app.webhooks.on(protection_events, async ({octokit, payload}) => {
     console.log(payload);
 
-    if(payload.sender.type !== 'Bot') {
+    if (payload.sender.type !== 'Bot') {
         await octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
             {
@@ -55,7 +55,21 @@ app.webhooks.on(protection_events, async ({ octokit, payload }) => {
     }
 });
 
-expressApp.use(createNodeMiddleware(app));
+function onUnhandledRequest(request, response) {
+    response.writeHead(400, {
+        "content-type": "application/json",
+    });
+    console.log(JSON.stringify({
+        error: error.message,
+    }))
+    response.end(
+        JSON.stringify({
+            error: error.message,
+        })
+    );
+}
+
+expressApp.use(createNodeMiddleware(app, {onUnhandledRequest: onUnhandledRequest}));
 
 expressApp.get('/', (req, res) => {
     console.log(`Healthcheck on ${req.path}`)
