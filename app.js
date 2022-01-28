@@ -1,4 +1,4 @@
-const {App, createNodeMiddleware} = require("@octokit/app");
+const { App, createNodeMiddleware } = require("@octokit/app");
 const morgan = require("morgan");
 const express = require("express");
 const expressApp = express();
@@ -29,10 +29,10 @@ const protection_events = [
     "branch_protection_rule.created",
     "branch_protection_rule.edited",
     "branch_protection_rule.deleted",
-    "repository.transferred"
+    "create"
 ]
 
-app.webhooks.on(protection_events, async ({octokit, payload}) => {
+app.webhooks.on(protection_events, async ({ octokit, payload }) => {
     console.log(payload);
 
     if (payload.sender.type !== 'Bot') {
@@ -41,7 +41,7 @@ app.webhooks.on(protection_events, async ({octokit, payload}) => {
             {
                 owner: payload.repository.owner.login,
                 repo: payload.repository.name,
-                branch: "main",
+                branch: payload.repository.default_branch,
                 required_status_checks: {
                     contexts: [],
                     strict: true,
