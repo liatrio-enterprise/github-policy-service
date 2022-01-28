@@ -28,7 +28,8 @@ const protection_events = [
     "repository.created",
     "branch_protection_rule.created",
     "branch_protection_rule.edited",
-    "branch_protection_rule.deleted"
+    "branch_protection_rule.deleted",
+    "repository.transferred"
 ]
 
 app.webhooks.on(protection_events, async ({octokit, payload}) => {
