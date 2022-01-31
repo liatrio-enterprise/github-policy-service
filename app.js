@@ -1,9 +1,7 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
-const morgan = require("morgan");
 const express = require("express");
 const expressApp = express();
 
-expressApp.use(morgan('common'));
 expressApp.use(express.json())
 expressApp.use((req, res, next) => {
     console.log(JSON.stringify({ headers: req.headers, body: req.body }));
@@ -33,8 +31,6 @@ const protection_events = [
 ]
 
 app.webhooks.on(protection_events, async ({ octokit, payload }) => {
-    console.log(payload);
-
     if (payload.sender.type !== 'Bot') {
         await octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
@@ -61,28 +57,7 @@ app.webhooks.on(protection_events, async ({ octokit, payload }) => {
     }
 });
 
-function onUnhandledRequest(request, response) {
-    response.writeHead(500, {
-        "content-type": "application/json",
-    });
-    console.log(JSON.stringify({
-        error: error.message,
-    }))
-    response.end(
-        JSON.stringify({
-            error: error.message,
-        })
-    );
-}
-
-expressApp.use(createNodeMiddleware(app, {
-    onUnhandledRequest,
-    log: {
-        debug: console.log,
-        info: console.log,
-        error: console.log
-    }
-}));
+expressApp.use(createNodeMiddleware(app));
 
 expressApp.get('/', (req, res) => {
     console.log(`Healthcheck on ${req.path}`)
@@ -95,9 +70,6 @@ expressApp.get('/healthcheck', (req, res) => {
 })
 
 const port = process.env.PORT || 3000;
-
-console.log(process.env)
-
 expressApp.listen(port, '0.0.0.0');
 
 
