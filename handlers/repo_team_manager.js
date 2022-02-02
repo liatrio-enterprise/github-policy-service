@@ -7,7 +7,6 @@ module.exports = async function({ octokit, payload }) {
             org: payload.repository.owner.login
         }
     )
-    console.log(teams);
 
     teams.data.map(async team => {
         if(!repo_name.startsWith(team.slug)) {
@@ -25,10 +24,4 @@ module.exports = async function({ octokit, payload }) {
             }
         )
     });
-
-    //potential problems
-    /*
-        - how do we want to manage being able to change team repo permissions (if at all)
-        - do we want something like "platform" to be added to both a "platfor" and "platform" team? or just the team specified in name?
-    */
 }
