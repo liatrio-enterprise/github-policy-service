@@ -1,6 +1,7 @@
 module.exports = async function ({ octokit, payload }) {
     const repo_name = payload.repository.name;
     if (!repo_name.includes(".")) {
+        console.log("No team name found in repo name.");
         return;
     }
 
@@ -13,11 +14,14 @@ module.exports = async function ({ octokit, payload }) {
             org: payload.repository.owner.login,
             team_slug: team_slug
         }
-    );
+    ).catch(error => {
+        console.log(error);
+    });
     
     if (team_response?.status !== 200) {
+        console.log("Team response: " + team_response?.status);
         return;
-    }
+    };
     
     await octokit.request(
         "PUT /orgs/{org}/teams/{team_slug}/repos/{owner}/{repo}",
@@ -28,5 +32,7 @@ module.exports = async function ({ octokit, payload }) {
             permission: "maintain",
             repo: repo_name
         }
-    );
+    ).catch(error => {
+        console.log(error);
+    });
 }
