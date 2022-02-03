@@ -27,9 +27,7 @@ Events:
 
 #### Repo Management
 
-This Github App will also listen for `repository` events in order to associate them with their intended teams. A list of teams belonging to the current org will be retrieved and compared against the repo that is being created/edited. Repos with `maintain` permissions will be added to the teams that a match is found for.
-
-> **_NOTE:_**  Our current logic uses [`.startsWith()`](https://www.w3schools.com/jsref/jsref_startswith.asp) to associate repos to teams. This means that repos with team names that are substrings of other teams will also be added to those teams.
+This Github App will also listen for `repository` events in order to associate them with their intended teams. Team names should be included in the beginning of repo names delimited by a `.`. If a team name is included and the team exists in the org, the repo will be associated with that team with `maintain` permissions. 
 
 ```
 Events:
