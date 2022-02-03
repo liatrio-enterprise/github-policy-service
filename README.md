@@ -1,6 +1,6 @@
-# GitHub Org Policy Service
+# GitHub Policy Service
 
-Github Org Policy Service is a Github App that enforces and maintains branch protection rules on a default branch for repositories that are created in a Github organization.
+Github Policy Service is a Github App that enforces and maintains branch protection rules on a default branch as well as associate repositories to their respective teams upon certain org events.
 
 ---
 
@@ -13,16 +13,38 @@ A push to main will kick off a Github Actions workflow that builds a Docker imag
 ---
 
 ### Usage
+#### Branch Protection
 
-This Github App will listen to an `.on` webhook event for when a repository is created, when a new branch is created in a respository, as well as anytime branch protection rules are created, edited, or deleted. More events can be added the array of events that are being listened for. When these events are triggered by a user, the preset branch protection rules will re-apply on the default branch.
+This Github app will listen for `repository`, `branch_protection_rule`, and `create` webhook events in order to enforce and maintain branch protection rules on repos that may be created or imported. Once applied, users may no longer manipulate the branch protection rules that are put in place in the default branch. Any edits to the branch protection rules will result in reenforcement of the original rules. If an edit is made with a name change, a new rule will be created with the new name. Deleting the default branch rule will result in a reapplication of the rules.
+```
+Events:
+    "repository.created",
+    "branch_protection_rule.created",
+    "branch_protection_rule.edited",
+    "branch_protection_rule.deleted",
+    "create"
+```
 
-An example of the branch protection rules we use can be found here: [branch protection rules](https://github.com/liatrio/github-org-policy-service/blob/main/app.js#L42-L58)
+#### Repo Management
+
+This Github App will also listen for `repository` events in order to associate them with their intended teams. A list of teams belonging to the current org will be retrieved and compared against the repo that is being created/edited. Repos with `maintain` permissions will be added to the teams that a match is found for.
+
+> **_NOTE:_**  Our current logic uses [`.startsWith()`](https://www.w3schools.com/jsref/jsref_startswith.asp) to associate repos to teams. This means that repos with team names that are substrings of other teams will also be added to those teams.
+
+```
+Events:
+    "repository.created",
+    "repository.edited",
+    "repository.renamed",
+    "repository.transferred",
+    "repository.unarchived"
+```
 
 ---
 
-### Development
+### Resources
 
-Some helpful resources can be found here:
+Some helpful information can be found here:
 - https://github.com/octokit/app.js/
 - https://github.com/octokit/webhooks.js/
 
