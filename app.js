@@ -4,13 +4,14 @@ const expressApp = express();
 const branch_protection = require("./handlers/branch_protection.js");
 const repo_team_manager = require("./handlers/repo_team_manager.js");
 
-expressApp.use(express.json())
-expressApp.use((req, res, next) => {
-    console.log(JSON.stringify({ headers: req.headers, body: req.body }));
+expressApp.use(express.json());
+expressApp.use((request, res, next) => {
+    console.log(JSON.stringify({ headers: request.headers,
+        body: request.body }));
     next();
-})
+});
 
-require('dotenv').config()
+require("dotenv").config();
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -29,7 +30,7 @@ app.webhooks.on([
     "branch_protection_rule.created",
     "branch_protection_rule.edited",
     "branch_protection_rule.deleted",
-    "create"
+    "create",
 ], branch_protection);
 
 app.webhooks.on([
@@ -37,22 +38,21 @@ app.webhooks.on([
     "repository.edited",
     "repository.renamed",
     "repository.transferred",
-    "repository.unarchived"
+    "repository.unarchived",
 ], repo_team_manager);
 
 expressApp.use(createNodeMiddleware(app));
 
-expressApp.get('/', (req, res) => {
-    console.log(`Healthcheck on ${req.path}`)
-    res.send('ok')
-})
+expressApp.get("/", (request, res) => {
+    console.log(`Healthcheck on ${request.path}`);
+    res.send("ok");
+});
 
-expressApp.get('/healthcheck', (req, res) => {
-    console.log(`Healthcheck on ${req.path}`)
-    res.send('ok')
-})
+expressApp.get("/healthcheck", (request, res) => {
+    console.log(`Healthcheck on ${request.path}`);
+    res.send("ok");
+});
 
 const port = process.env.PORT || 3000;
-expressApp.listen(port, '0.0.0.0');
-
+expressApp.listen(port, "0.0.0.0");
 

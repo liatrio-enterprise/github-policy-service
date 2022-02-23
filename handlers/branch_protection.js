@@ -1,5 +1,5 @@
-module.exports = async function({ octokit, payload }) {
-    if (payload.sender.type !== 'Bot') {
+module.exports = async function ({ octokit, payload }) {
+    if (payload.sender.type !== "Bot") {
         await octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
             {
@@ -20,7 +20,7 @@ module.exports = async function({ octokit, payload }) {
                 allow_deletions: false,
                 required_conversation_resolution: true,
                 restrictions: null,
-            }
+            },
         );
     }
-}
+};
