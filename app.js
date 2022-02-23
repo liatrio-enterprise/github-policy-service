@@ -1,15 +1,12 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
 const express = require("express");
+
+const branchProtection = require("./handlers/branch-protection");
+const repoTeamManager = require("./handlers/repo-team-manager");
+
 const expressApp = express();
-const branch_protection = require("./handlers/branch_protection.js");
-const repo_team_manager = require("./handlers/repo_team_manager.js");
 
 expressApp.use(express.json());
-expressApp.use((request, res, next) => {
-    console.log(JSON.stringify({ headers: request.headers,
-        body: request.body }));
-    next();
-});
 
 require("dotenv").config();
 
@@ -31,7 +28,7 @@ app.webhooks.on([
     "branch_protection_rule.edited",
     "branch_protection_rule.deleted",
     "create",
-], branch_protection);
+], branchProtection);
 
 app.webhooks.on([
     "repository.created",
@@ -39,18 +36,16 @@ app.webhooks.on([
     "repository.renamed",
     "repository.transferred",
     "repository.unarchived",
-], repo_team_manager);
+], repoTeamManager);
 
 expressApp.use(createNodeMiddleware(app));
 
-expressApp.get("/", (request, res) => {
-    console.log(`Healthcheck on ${request.path}`);
-    res.send("ok");
+expressApp.get("/", (request, response) => {
+    response.send("ok");
 });
 
-expressApp.get("/healthcheck", (request, res) => {
-    console.log(`Healthcheck on ${request.path}`);
-    res.send("ok");
+expressApp.get("/healthcheck", (request, response) => {
+    response.send("ok");
 });
 
 const port = process.env.PORT || 3000;
