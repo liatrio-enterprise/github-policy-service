@@ -1,7 +1,7 @@
-module.exports = async ({ octokit, payload }) => {
+module.exports = (logger) => async ({ octokit, payload }) => {
     const repoName = payload.repository.name;
     if (!repoName.includes(".")) {
-        console.log("No team name found in repo name.");
+        logger.info("No team name found in repo name.");
 
         return;
     }
@@ -15,11 +15,11 @@ module.exports = async ({ octokit, payload }) => {
             teamSlug,
         },
     ).catch((error) => {
-        console.log(error);
+        logger.info(error);
     });
 
     if (teamResponse?.status !== 200) {
-        console.log(`Team response: ${teamResponse?.status}`);
+        logger.info(`Team response: ${teamResponse?.status}`);
 
         return;
     }
@@ -34,6 +34,6 @@ module.exports = async ({ octokit, payload }) => {
             repo: repoName,
         },
     ).catch((error) => {
-        console.log(error);
+        logger.error(error);
     });
 };
