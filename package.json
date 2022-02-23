@@ -1,25 +1,29 @@
 {
-  "name": "org-management-facilitor",
+  "name": "github-policy-service",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OneGHEOrg/org-management-facilitor.git"
+    "url": "git+https://github.com/liatrio-enterprise/github-policy-service.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/OneGHEOrg/org-management-facilitor/issues"
+    "url": "https://github.com/liatrio-enterprise/github-policy-service/issues"
   },
-  "homepage": "https://github.com/OneGHEOrg/org-management-facilitor#readme",
+  "homepage": "https://github.com/liatrio-enterprise/github-policy-service#readme",
   "dependencies": {
     "@octokit/app": "^12.0.5",
     "@octokit/rest": "^18.12.0",
     "dotenv": "^14.2.0",
     "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "@liatrio/eslint-config": "^1.0.1",
+    "eslint": "^8.9.0"
   }
 }
