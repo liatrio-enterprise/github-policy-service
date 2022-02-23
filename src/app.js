@@ -57,4 +57,3 @@ expressApp.get("/healthcheck", (request, response) => {
 
 const port = process.env.PORT || 3000;
 expressApp.listen(port, "0.0.0.0");
-
