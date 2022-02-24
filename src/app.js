@@ -9,7 +9,9 @@ const repoTeamManager = require("./handlers/repo-team-manager");
 const expressApp = express();
 
 expressApp.use(express.json());
-expressApp.use(expressLogger);
+expressApp.use(expressLogger({
+    logger
+}));
 
 require("dotenv").config();
 
@@ -56,4 +58,6 @@ expressApp.get("/healthcheck", (request, response) => {
 });
 
 const port = process.env.PORT || 3000;
-expressApp.listen(port, "0.0.0.0");
+expressApp.listen(port, "0.0.0.0", () => {
+    logger.info(`Application listening on port ${port}`);
+});
