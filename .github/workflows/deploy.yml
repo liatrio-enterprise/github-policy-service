@@ -48,6 +48,3 @@ jobs:
         with:
           app-name: ${{ env.AZURE_WEBAPP_NAME }}
           images: ${{ env.TAG }}
-
-
-    

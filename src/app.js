@@ -1,16 +1,19 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
 const express = require("express");
+const logger = require("pino")();
+const expressLogger = require("express-pino-logger");
+
+const branchProtection = require("./handlers/branch-protection");
+const repoTeamManager = require("./handlers/repo-team-manager");
+
 const expressApp = express();
-const branch_protection = require("./handlers/branch_protection.js");
-const repo_team_manager = require("./handlers/repo_team_manager.js");
 
-expressApp.use(express.json())
-expressApp.use((req, res, next) => {
-    console.log(JSON.stringify({ headers: req.headers, body: req.body }));
-    next();
-})
+expressApp.use(express.json());
+expressApp.use(expressLogger({
+    logger
+}));
 
-require('dotenv').config()
+require("dotenv").config();
 
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
@@ -29,30 +32,32 @@ app.webhooks.on([
     "branch_protection_rule.created",
     "branch_protection_rule.edited",
     "branch_protection_rule.deleted",
-    "create"
-], branch_protection);
+    "create",
+], branchProtection(logger.child({
+    feature: "branch protection",
+})));
 
 app.webhooks.on([
     "repository.created",
     "repository.edited",
     "repository.renamed",
     "repository.transferred",
-    "repository.unarchived"
-], repo_team_manager);
+    "repository.unarchived",
+], repoTeamManager(logger.child({
+    feature: "repo team manager",
+})));
 
 expressApp.use(createNodeMiddleware(app));
 
-expressApp.get('/', (req, res) => {
-    console.log(`Healthcheck on ${req.path}`)
-    res.send('ok')
-})
+expressApp.get("/", (request, response) => {
+    response.send("ok");
+});
 
-expressApp.get('/healthcheck', (req, res) => {
-    console.log(`Healthcheck on ${req.path}`)
-    res.send('ok')
-})
+expressApp.get("/healthcheck", (request, response) => {
+    response.send("ok");
+});
 
 const port = process.env.PORT || 3000;
-expressApp.listen(port, '0.0.0.0');
-
-
+expressApp.listen(port, "0.0.0.0", () => {
+    logger.info(`Application listening on port ${port}`);
+});

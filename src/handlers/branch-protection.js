@@ -1,5 +1,7 @@
-module.exports = async function({ octokit, payload }) {
-    if (payload.sender.type !== 'Bot') {
+module.exports = (logger) => async ({ octokit, payload }) => {
+    if (payload.sender.type !== "Bot") {
+        logger.info("Enabling branch protection");
+
         await octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
             {
@@ -19,8 +21,8 @@ module.exports = async function({ octokit, payload }) {
                 allow_force_pushes: false,
                 allow_deletions: false,
                 required_conversation_resolution: true,
-                restrictions: null,
-            }
+                restrictions: undefined,
+            },
         );
     }
-}
+};
