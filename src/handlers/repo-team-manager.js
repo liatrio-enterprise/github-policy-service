@@ -6,34 +6,30 @@ module.exports = (logger) => async ({ octokit, payload }) => {
         return;
     }
 
-    const teamSlug = repoName.split(".")[0];
+    const [teamSlug] = repoName.split(".");
 
-    const teamResponse = await octokit.request(
-        "GET /orgs/{org}/teams/{teamSlug}",
-        {
-            org: payload.repository.owner.login,
-            teamSlug,
-        },
-    ).catch((error) => {
-        logger.info(error);
-    });
+    try {
+        const teamResponse = await octokit.request(
+            "GET /orgs/{org}/teams/{teamSlug}",
+            {
+                org: payload.repository.owner.login,
+                teamSlug,
+            },
+        );
 
-    if (teamResponse?.status !== 200) {
-        logger.info(`Team response: ${teamResponse?.status}`);
+        await octokit.request(
+            "PUT /orgs/{org}/teams/{teamSlug}/repos/{owner}/{repo}",
+            {
+                org: payload.repository.owner.login,
+                teamSlug: teamResponse.data.slug,
+                owner: payload.repository.owner.login,
+                permission: "maintain",
+                repo: repoName,
+            },
+        );
+    } catch (error) {
+        logger.error({ error });
 
-        return;
+        throw error;
     }
-
-    await octokit.request(
-        "PUT /orgs/{org}/teams/{teamSlug}/repos/{owner}/{repo}",
-        {
-            org: payload.repository.owner.login,
-            teamSlug: teamResponse.data.slug,
-            owner: payload.repository.owner.login,
-            permission: "maintain",
-            repo: repoName,
-        },
-    ).catch((error) => {
-        logger.error(error);
-    });
 };

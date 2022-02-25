@@ -4,7 +4,8 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "lintfix": "eslint --fix ."
   },
   "repository": {
     "type": "git",
@@ -26,6 +27,7 @@
   },
   "devDependencies": {
     "@liatrio/eslint-config": "^1.0.1",
-    "eslint": "^8.9.0"
+    "eslint": "^8.9.0",
+    "pino-pretty": "^7.5.1"
   }
 }
