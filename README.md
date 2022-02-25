@@ -1,5 +1,7 @@
 # GitHub Policy Service
 
+![CodeQL](https://github.com/liatrio-enterprise/github-policy-service/actions/workflows/codeql-analysis.yml/badge.svg)
+
 Github Policy Service is a Github App that enforces and maintains branch protection rules on a default branch as well as associate repositories to their respective teams upon certain org events.
 
 ---
