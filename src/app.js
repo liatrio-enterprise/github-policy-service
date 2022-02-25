@@ -1,23 +1,62 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
 const express = require("express");
-const logger = require("pino")();
+const fs = require("node:fs");
+
+const pino = require("pino");
 const expressLogger = require("express-pino-logger");
 
 const branchProtection = require("./handlers/branch-protection");
 const repoTeamManager = require("./handlers/repo-team-manager");
 
+const getLogger = () => {
+    const pinoOptions = {
+        serializers: {
+            err: pino.stdSerializers.err,
+            error: pino.stdSerializers.err,
+        },
+    };
+
+    if (process.env.NODE_ENV === "local") {
+        // eslint will get mad about this, because pino-pretty is a devDependency
+        // however, this code should only execute when running locally anyways
+        // eslint-disable-next-line node/no-unpublished-require
+        const pretty = require("pino-pretty");
+
+        return pino(pinoOptions, pretty({
+            colorize: true,
+        }));
+    }
+
+    return pino(pinoOptions);
+};
+
+const logger = getLogger();
+
 const expressApp = express();
 
 expressApp.use(express.json());
 expressApp.use(expressLogger({
-    logger
+    logger,
 }));
 
 require("dotenv").config();
 
+const getAppPrivateKey = () => {
+    if (process.env.GITHUB_APP_PRIVATE_KEY) {
+        return process.env.GITHUB_APP_PRIVATE_KEY;
+    }
+
+    if (process.env.GITHUB_APP_PRIVATE_KEY_PATH) {
+        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        return fs.readFileSync(process.env.GITHUB_APP_PRIVATE_KEY_PATH).toString();
+    }
+
+    return undefined;
+};
+
 const app = new App({
     appId: process.env.GITHUB_APP_ID,
-    privateKey: process.env.GITHUB_APP_PRIVATE_KEY,
+    privateKey: getAppPrivateKey(),
     oauth: {
         clientId: process.env.GITHUB_APP_CLIENT_ID,
         clientSecret: process.env.GITHUB_APP_CLIENT_SECRET,
