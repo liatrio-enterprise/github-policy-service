@@ -5,7 +5,8 @@
   "main": "src/app.js",
   "scripts": {
     "lint": "eslint .",
-    "lintfix": "eslint --fix ."
+    "lintfix": "eslint --fix .",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
