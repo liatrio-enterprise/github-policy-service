@@ -1,10 +1,11 @@
-const branchProtectionHandler = require("../../src/handlers/branch-protection")(fakeLogger);
+const branchProtectionHandler = require("../../src/handlers/branch-protection");
 
 describe("branch protection", () => {
     let expectedOwner,
         expectedRepo,
         expectedBranch,
-        expectedPayload;
+        expectedPayload,
+        handler;
 
     beforeEach(() => {
         expectedOwner = chance.word();
@@ -23,10 +24,12 @@ describe("branch protection", () => {
         };
 
         fakeOctokit.request.mockResolvedValue();
+
+        handler = branchProtectionHandler.handler({ logger: fakeLogger });
     });
 
     it("should enable branch protection when the appropriate event is received", async () => {
-        await branchProtectionHandler({
+        await handler({
             octokit: fakeOctokit,
             payload: expectedPayload,
         });
@@ -60,7 +63,7 @@ describe("branch protection", () => {
         });
 
         it("should not respond to the event", async () => {
-            await branchProtectionHandler({
+            await handler({
                 octokit: fakeOctokit,
                 payload: expectedPayload,
             });
@@ -79,7 +82,7 @@ describe("branch protection", () => {
         });
 
         it("should log the error and bubble it up to the GitHub webhook middleware", async () => {
-            await expect(() => branchProtectionHandler({
+            await expect(() => handler({
                 octokit: fakeOctokit,
                 payload: expectedPayload,
             })).rejects.toThrow(expectedError);

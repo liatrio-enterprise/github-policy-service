@@ -1,4 +1,4 @@
-const repoTeamManagerHandler = require("../../src/handlers/repo-team-manager")(fakeLogger);
+const repoTeamManagerHandler = require("../../src/handlers/repo-team-manager");
 
 describe("repo team manager", () => {
     let expectedOwner,
@@ -6,7 +6,8 @@ describe("repo team manager", () => {
         expectedRepoName,
         expectedTeam,
         expectedTeamSlug,
-        expectedPayload;
+        expectedPayload,
+        handler;
 
     beforeEach(() => {
         expectedOwner = chance.word();
@@ -34,10 +35,12 @@ describe("repo team manager", () => {
                 slug: expectedTeamSlug,
             },
         });
+
+        handler = repoTeamManagerHandler.handler({ logger: fakeLogger });
     });
 
     it("should assign the specified team to the newly created repository", async () => {
-        await repoTeamManagerHandler({
+        await handler({
             octokit: fakeOctokit,
             payload: expectedPayload,
         });
@@ -65,7 +68,7 @@ describe("repo team manager", () => {
         });
 
         it("should not respond to the event", async () => {
-            await repoTeamManagerHandler({
+            await handler({
                 octokit: fakeOctokit,
                 payload: expectedPayload,
             });
@@ -84,7 +87,7 @@ describe("repo team manager", () => {
         });
 
         it("should log the error and bubble it up to the GitHub webhook middleware", async () => {
-            await expect(() => repoTeamManagerHandler({
+            await expect(() => handler({
                 octokit: fakeOctokit,
                 payload: expectedPayload,
             })).rejects.toThrow(expectedError);
