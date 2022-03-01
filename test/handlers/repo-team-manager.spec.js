@@ -1,0 +1,93 @@
+const repoTeamManagerHandler = require("../../src/handlers/repo-team-manager")(fakeLogger);
+
+describe("repo team manager", () => {
+    let expectedOwner,
+        expectedRepo,
+        expectedRepoName,
+        expectedTeam,
+        expectedTeamSlug,
+        expectedPayload;
+
+    beforeEach(() => {
+        expectedOwner = chance.word();
+        expectedTeam = chance.word();
+        expectedRepoName = chance.word();
+        expectedRepo = `${expectedTeam}.${expectedRepoName}`;
+        expectedTeamSlug = chance.word();
+
+        expectedPayload = {
+            repository: {
+                name: expectedRepo,
+                owner: {
+                    login: expectedOwner,
+                },
+            },
+        };
+
+        fakeOctokit.request.mockResolvedValue();
+
+        when(fakeOctokit.request).calledWith("GET /orgs/{org}/teams/{teamSlug}", {
+            org: expectedOwner,
+            teamSlug: expectedTeam,
+        }).mockResolvedValue({
+            data: {
+                slug: expectedTeamSlug,
+            },
+        });
+    });
+
+    it("should assign the specified team to the newly created repository", async () => {
+        await repoTeamManagerHandler({
+            octokit: fakeOctokit,
+            payload: expectedPayload,
+        });
+
+        expect(fakeOctokit.request).toHaveBeenCalledWith("GET /orgs/{org}/teams/{teamSlug}", {
+            org: expectedOwner,
+            teamSlug: expectedTeam,
+        });
+
+        expect(fakeOctokit.request).toHaveBeenCalledWith(
+            "PUT /orgs/{org}/teams/{teamSlug}/repos/{owner}/{repo}",
+            {
+                org: expectedOwner,
+                teamSlug: expectedTeamSlug,
+                owner: expectedOwner,
+                permission: "maintain",
+                repo: expectedRepo,
+            },
+        );
+    });
+
+    describe("when the new repository doesn't contain a team prefix", () => {
+        beforeEach(() => {
+            expectedPayload.repository.name = expectedRepoName;
+        });
+
+        it("should not respond to the event", async () => {
+            await repoTeamManagerHandler({
+                octokit: fakeOctokit,
+                payload: expectedPayload,
+            });
+
+            expect(fakeOctokit.request).not.toHaveBeenCalled();
+        });
+    });
+
+    describe("when an error is encountered while managing a repository's teams", () => {
+        let expectedError;
+
+        beforeEach(() => {
+            expectedError = new Error(chance.word());
+
+            fakeOctokit.request.mockRejectedValue(expectedError);
+        });
+
+        it("should log the error and bubble it up to the GitHub webhook middleware", async () => {
+            await expect(() => repoTeamManagerHandler({
+                octokit: fakeOctokit,
+                payload: expectedPayload,
+            })).rejects.toThrow(expectedError);
+        });
+    });
+});

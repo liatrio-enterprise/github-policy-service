@@ -6,10 +6,12 @@ terraform.tfstate
 *.auto.tfvars
 *.tfvars
 .env
+.DS_Store
 
 .idea/
-local.settings.json
-node_modules
-dist
 
+local.settings.json
+node_modules/
+dist
+.jest/
 package-lock.json

@@ -7,3 +7,14 @@ extends:
   - "@liatrio/eslint-config"
 parserOptions:
   ecmaVersion: 11
+overrides:
+  - files:
+      - "**/*.spec.js"
+      - "test/util/jest-setup.js"
+    globals:
+      fakeLogger: readonly
+      fakeOctokit: readonly
+      chance: readonly
+      when: readonly
+    rules:
+      "node/no-unpublished-require": off
