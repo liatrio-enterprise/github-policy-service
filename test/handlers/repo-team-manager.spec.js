@@ -39,6 +39,16 @@ describe("repo team manager", () => {
         handler = repoTeamManagerHandler.handler({ logger: fakeLogger });
     });
 
+    it("should update a repository's teams when a repository is created, edited, renamed, transferred, or unarchived", () => {
+        expect(repoTeamManagerHandler.events).toEqual([
+            "repository.created",
+            "repository.edited",
+            "repository.renamed",
+            "repository.transferred",
+            "repository.unarchived",
+        ]);
+    });
+
     it("should assign the specified team to the newly created repository", async () => {
         await handler({
             octokit: fakeOctokit,

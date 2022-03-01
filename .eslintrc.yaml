@@ -18,3 +18,4 @@ overrides:
       when: readonly
     rules:
       "node/no-unpublished-require": off
+      max-len: off

@@ -28,6 +28,16 @@ describe("branch protection", () => {
         handler = branchProtectionHandler.handler({ logger: fakeLogger });
     });
 
+    it("should update branch protection rules when repositories are created, or when branch protection rules are changed", () => {
+        expect(branchProtectionHandler.events).toEqual([
+            "repository.created",
+            "branch_protection_rule.created",
+            "branch_protection_rule.edited",
+            "branch_protection_rule.deleted",
+            "create",
+        ]);
+    });
+
     it("should enable branch protection when the appropriate event is received", async () => {
         await handler({
             octokit: fakeOctokit,
