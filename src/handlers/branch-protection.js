@@ -15,7 +15,7 @@ module.exports = {
                 {
                     owner: payload.repository.owner.login,
                     repo: payload.repository.name,
-                    branch: "main",
+                    branch: payload.repository.default_branch,
                     required_status_checks: {
                         contexts: [],
                         strict: true,

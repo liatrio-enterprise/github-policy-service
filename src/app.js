@@ -21,7 +21,10 @@ const getLogger = () => {
         // eslint-disable-next-line node/no-unpublished-require
         const pretty = require("pino-pretty");
 
-        return pino(pinoOptions, pretty({
+        return pino({
+            ...pinoOptions,
+            level: "debug",
+        }, pretty({
             colorize: true,
         }));
     }

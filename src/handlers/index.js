@@ -18,12 +18,14 @@ module.exports = async (app, logger) => {
 
         return app.webhooks.on(events, async (handlerArgs) => {
             const { octokit, payload } = handlerArgs;
-            const whitelistedRepositories = await getWhitelistedRepositories(octokit, logger);
+            const whitelistedRepositories = await getWhitelistedRepositories(octokit, logger.child({
+                name: "repository-whitelist"
+            }));
 
             if (!whitelistedRepositories.includes(payload.repository.name)) {
                 await handler({
                     logger: logger.child({
-                        handler: handlerName,
+                        name: handlerName,
                     }),
                 })(handlerArgs);
             }
