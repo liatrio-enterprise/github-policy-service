@@ -1,6 +1,8 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
+const getWhitelistedRepositories = require("../repository-whitelist");
+
 module.exports = async (app, logger) => {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
     const files = await fs.readdir(__dirname);
@@ -14,10 +16,21 @@ module.exports = async (app, logger) => {
         const { events, handler } = require(path.join(__dirname, file));
         const handlerName = path.parse(file).name;
 
-        return app.webhooks.on(events, handler({
-            logger: logger.child({
-                handler: handlerName,
-            }),
-        }));
+        return app.webhooks.on(events, async (handlerArgs) => {
+            const { octokit, payload } = handlerArgs;
+            const whitelistedRepositories = await getWhitelistedRepositories(octokit, logger);
+
+            if (!whitelistedRepositories.includes(payload.repository.name)) {
+                await handler({
+                    logger: logger.child({
+                        handler: handlerName,
+                    }),
+                })(handlerArgs);
+            }
+        });
     }));
+
+    app.webhooks.onError((error) => {
+        logger.error({ error });
+    });
 };
