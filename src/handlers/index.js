@@ -1,7 +1,7 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const getWhitelistedRepositories = require("../repository-whitelist");
+const repositoryIsWhitelisted = require("../repository-whitelist");
 
 module.exports = async (app, logger) => {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -18,11 +18,8 @@ module.exports = async (app, logger) => {
 
         return app.webhooks.on(events, async (handlerArguments) => {
             const { octokit, payload } = handlerArguments;
-            const whitelistedRepositories = await getWhitelistedRepositories(octokit, logger.child({
-                name: "repository-whitelist",
-            }));
 
-            if (!whitelistedRepositories.includes(payload.repository.name)) {
+            if (!await repositoryIsWhitelisted(octokit, logger, payload)) {
                 await handler({
                     logger: logger.child({
                         name: handlerName,

@@ -2,7 +2,7 @@ const config = require("./config")();
 
 let whitelistedRepositories;
 
-module.exports = async (octokit, logger) => {
+const getRepositoryWhitelist = async (octokit, logger) => {
     if (!config.whitelistedRepositoriesListLocation) {
         return [];
     }
@@ -34,3 +34,39 @@ module.exports = async (octokit, logger) => {
 
     return repositories;
 };
+
+const parseRepository = (repository) => {
+    const parts = repository.split("/");
+
+    if (parts.length === 2) {
+        return {
+            owner: parts[0],
+            repo: parts[1],
+        };
+    }
+
+    // if the repo doesn't have an organization prefix, assume it's the org where the whitelist exists
+    return {
+        owner: config.whitelistedRepositoriesListLocation.owner,
+        repo: repository,
+    };
+};
+
+const repositoryIsWhitelisted = async (octokit, logger, payload) => {
+    const repositoryWhitelist = await getRepositoryWhitelist(octokit, logger);
+
+    for (const repository of repositoryWhitelist) {
+        const parsedRepository = parseRepository(repository);
+
+        if (
+            payload.repository.owner.login === parsedRepository.owner &&
+            payload.repository.name === parsedRepository.repo
+        ) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+module.exports = repositoryIsWhitelisted;
