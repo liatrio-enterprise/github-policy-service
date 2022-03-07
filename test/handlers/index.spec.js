@@ -1,6 +1,8 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
+const setupWebhookHandlers = require("../../src/handlers");
+
 describe("handlers", () => {
     it("should ensure that each handler follows the correct data structure", async () => {
         const handlerDirectory = path.resolve(path.join(__dirname, "../../src/handlers"));
@@ -26,5 +28,27 @@ describe("handlers", () => {
 
             expect(handlerFunction).toEqual(expect.any(Function));
         }
+    });
+
+    describe("handler registration", () => {
+        let fakeApp;
+
+        beforeEach(() => {
+            fakeApp = {
+                webhooks: {
+                    on: jest.fn(),
+                    onError: jest.fn(),
+                },
+            };
+        });
+
+        it("should register one webhook for every handler within the handlers directory", async () => {
+            // eslint-disable-next-line security/detect-non-literal-fs-filename
+            const files = await fs.readdir(path.join(__dirname, "..", "..", "src", "handlers"));
+
+            await setupWebhookHandlers(fakeApp, fakeLogger);
+
+            expect(fakeApp.webhooks.on).toHaveBeenCalledTimes(files.length - 1);
+        });
     });
 });
