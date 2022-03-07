@@ -525,10 +525,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@liatrio/eslint-config@^1.0.1":
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/@liatrio/eslint-config/-/eslint-config-1.0.1.tgz#4cd3e1f2f5b5255bc0998b84e0769641532ee8b6"
-  integrity sha512-Cqvpmz+VCpHyL0C5zIHz6nTnQuTlGskU2C1O6MMgkgB1x0myBuecdNOLt5nA6SuA9cLxb3/xEiUfQwIA/lxKpQ==
+"@liatrio/eslint-config@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@liatrio/eslint-config/-/eslint-config-1.1.0.tgz#0c101cbfeddaff588be50ecb3ebe7db3535a7e6d"
+  integrity sha512-0RC4N58XQ48qR8tvJ8vRRhL7HfpavSg9HEB2UjiLSsrFmQdLsQ2XKnVpGnBjGN53fCAjmWiApufY3RSzRHMNlw==
   dependencies:
     eslint-plugin-jest "^26.1.1"
     eslint-plugin-node "^11.1.0"

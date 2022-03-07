@@ -5,8 +5,7 @@ const fs = require("node:fs");
 const pino = require("pino");
 const expressLogger = require("express-pino-logger");
 
-const branchProtection = require("./handlers/branch-protection");
-const repoTeamManager = require("./handlers/repo-team-manager");
+const setupWebhookHandlers = require("./handlers");
 
 const getLogger = () => {
     const pinoOptions = {
@@ -22,7 +21,10 @@ const getLogger = () => {
         // eslint-disable-next-line node/no-unpublished-require
         const pretty = require("pino-pretty");
 
-        return pino(pinoOptions, pretty({
+        return pino({
+            ...pinoOptions,
+            level: "debug",
+        }, pretty({
             colorize: true,
         }));
     }
@@ -66,37 +68,21 @@ const app = new App({
     },
 });
 
-app.webhooks.on([
-    "repository.created",
-    "branch_protection_rule.created",
-    "branch_protection_rule.edited",
-    "branch_protection_rule.deleted",
-    "create",
-], branchProtection(logger.child({
-    feature: "branch protection",
-})));
+(async () => {
+    await setupWebhookHandlers(app, logger);
 
-app.webhooks.on([
-    "repository.created",
-    "repository.edited",
-    "repository.renamed",
-    "repository.transferred",
-    "repository.unarchived",
-], repoTeamManager(logger.child({
-    feature: "repo team manager",
-})));
+    expressApp.use(createNodeMiddleware(app));
 
-expressApp.use(createNodeMiddleware(app));
+    expressApp.get("/", (request, response) => {
+        response.send("ok");
+    });
 
-expressApp.get("/", (request, response) => {
-    response.send("ok");
-});
+    expressApp.get("/healthcheck", (request, response) => {
+        response.send("ok");
+    });
 
-expressApp.get("/healthcheck", (request, response) => {
-    response.send("ok");
-});
-
-const port = process.env.PORT || 3000;
-expressApp.listen(port, "0.0.0.0", () => {
-    logger.info(`Application listening on port ${port}`);
-});
+    const port = process.env.PORT || 3000;
+    expressApp.listen(port, "0.0.0.0", () => {
+        logger.info(`Application listening on port ${port}`);
+    });
+})();

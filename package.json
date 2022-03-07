@@ -1,6 +1,6 @@
 {
   "name": "github-policy-service",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "",
   "main": "src/app.js",
   "scripts": {
@@ -27,7 +27,7 @@
     "pino": "^7.8.0"
   },
   "devDependencies": {
-    "@liatrio/eslint-config": "^1.0.1",
+    "@liatrio/eslint-config": "^1.1.0",
     "chance": "^1.1.8",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",

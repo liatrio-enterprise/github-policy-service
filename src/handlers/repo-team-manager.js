@@ -1,14 +1,20 @@
-module.exports = (logger) => async ({ octokit, payload }) => {
-    const repoName = payload.repository.name;
-    if (!repoName.includes(".")) {
-        logger.info("No team name found in repo name.");
+module.exports = {
+    events: [
+        "repository.created",
+        "repository.edited",
+        "repository.renamed",
+        "repository.transferred",
+        "repository.unarchived",
+    ],
+    handler: ({ logger }) => async ({ octokit, payload }) => {
+        const repoName = payload.repository.name;
+        if (!repoName.includes(".")) {
+            logger.info("No team name found in repo name.");
 
-        return;
-    }
+            return;
+        }
 
-    const [teamSlug] = repoName.split(".");
-
-    try {
+        const [teamSlug] = repoName.split(".");
         const teamResponse = await octokit.request(
             "GET /orgs/{org}/teams/{teamSlug}",
             {
@@ -27,9 +33,5 @@ module.exports = (logger) => async ({ octokit, payload }) => {
                 repo: repoName,
             },
         );
-    } catch (error) {
-        logger.error({ error });
-
-        throw error;
-    }
+    },
 };

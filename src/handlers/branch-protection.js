@@ -1,8 +1,15 @@
-module.exports = (logger) => async ({ octokit, payload }) => {
-    if (payload.sender.type !== "Bot") {
-        logger.info("Enabling branch protection");
+module.exports = {
+    events: [
+        "repository.created",
+        "branch_protection_rule.created",
+        "branch_protection_rule.edited",
+        "branch_protection_rule.deleted",
+        "create",
+    ],
+    handler: ({ logger }) => async ({ octokit, payload }) => {
+        if (payload.sender.type !== "Bot") {
+            logger.info("Enabling branch protection");
 
-        try {
             await octokit.request(
                 "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
                 {
@@ -25,10 +32,6 @@ module.exports = (logger) => async ({ octokit, payload }) => {
                     restrictions: null, // eslint-disable-line unicorn/no-null
                 },
             );
-        } catch (error) {
-            logger.error({ error }, "Error enabling branch protection");
-
-            throw error;
         }
-    }
+    },
 };
