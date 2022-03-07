@@ -2,6 +2,8 @@ jest.mock("../src/config");
 
 const config = require("../src/config");
 
+const createBase64EncodedRepositoryList = (repositories) => Buffer.from(JSON.stringify(repositories)).toString("base64");
+
 describe("repository whitelist", () => {
     let whitelistLocationOwner,
         whitelistLocationRepo,
@@ -10,8 +12,6 @@ describe("repository whitelist", () => {
         whitelistedRepositoryOwner,
         expectedPayload,
         repositoryIsWhitelisted;
-
-    const createBase64EncodedRepositoryList = (repositories) => Buffer.from(JSON.stringify(repositories)).toString("base64");
 
     beforeEach(() => {
         // this is needed because this module implements its own cache. by isolating this module, the cache is
@@ -31,8 +31,8 @@ describe("repository whitelist", () => {
                 name: whitelistedRepositoryName,
                 owner: {
                     login: whitelistedRepositoryOwner,
-                }
-            }
+                },
+            },
         };
 
         config.mockReturnValue({
@@ -40,17 +40,17 @@ describe("repository whitelist", () => {
                 owner: whitelistLocationOwner,
                 repo: whitelistLocationRepo,
                 path: whitelistLocationPath,
-            }
+            },
         });
 
         when(fakeOctokit.request).calledWith("GET /repos/{owner}/{repo}/contents/{path}", {
             owner: whitelistLocationOwner,
             repo: whitelistLocationRepo,
-            path: whitelistLocationPath
+            path: whitelistLocationPath,
         }).mockResolvedValue({
             data: {
-                content: createBase64EncodedRepositoryList([`${whitelistedRepositoryOwner}/${whitelistedRepositoryName}`])
-            }
+                content: createBase64EncodedRepositoryList([`${whitelistedRepositoryOwner}/${whitelistedRepositoryName}`]),
+            },
         });
     });
 
@@ -59,17 +59,17 @@ describe("repository whitelist", () => {
     });
 
     it("should return true if the given repository is in the whitelist", async () => {
-        const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload)
+        const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload);
 
-        expect(result).toBeTrue()
+        expect(result).toBeTrue();
     });
 
     it("should return false if the given repository is not in the whitelist", async () => {
         expectedPayload.repository.name = chance.word();
 
-        const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload)
+        const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload);
 
-        expect(result).toBeFalse()
+        expect(result).toBeFalse();
     });
 
     it("should pull from the cache when multiple whitelist checks occur within five minutes", async () => {
@@ -80,10 +80,10 @@ describe("repository whitelist", () => {
     });
 
     it("should invalidate the cache after five minutes", async () => {
-        jest.useFakeTimers()
+        jest.useFakeTimers();
         await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload);
 
-        jest.advanceTimersByTime(1000 * 60 * 5 + 1)
+        jest.advanceTimersByTime((1000 * 60 * 5) + 1);
         await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload);
 
         expect(fakeOctokit.request).toHaveBeenCalledTimes(2);
@@ -94,20 +94,20 @@ describe("repository whitelist", () => {
             when(fakeOctokit.request).calledWith("GET /repos/{owner}/{repo}/contents/{path}", {
                 owner: whitelistLocationOwner,
                 repo: whitelistLocationRepo,
-                path: whitelistLocationPath
+                path: whitelistLocationPath,
             }).mockResolvedValue({
                 data: {
-                    content: createBase64EncodedRepositoryList([whitelistedRepositoryName])
-                }
+                    content: createBase64EncodedRepositoryList([whitelistedRepositoryName]),
+                },
             });
         });
 
         it("should return true when the given repository is in the same org as the whitelist", async () => {
             expectedPayload.repository.owner.login = whitelistLocationOwner;
 
-            const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload)
+            const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload);
 
-            expect(result).toBeTrue()
+            expect(result).toBeTrue();
         });
     });
 
@@ -120,9 +120,9 @@ describe("repository whitelist", () => {
             expectedPayload.repository.name = chance.word();
             expectedPayload.repository.owner.login = chance.word();
 
-            const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload)
+            const result = await repositoryIsWhitelisted(fakeOctokit, fakeLogger, expectedPayload);
 
-            expect(result).toBeFalse()
+            expect(result).toBeFalse();
         });
     });
 });
