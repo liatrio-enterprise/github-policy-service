@@ -1,9 +1,11 @@
-const config = require("./config")();
+const config = require("./config");
 
 let whitelistedRepositories;
 
 const getRepositoryWhitelist = async (octokit, logger) => {
-    if (!config.whitelistedRepositoriesListLocation) {
+    const { whitelistedRepositoriesListLocation } = config();
+
+    if (!whitelistedRepositoriesListLocation) {
         return [];
     }
 
@@ -19,7 +21,7 @@ const getRepositoryWhitelist = async (octokit, logger) => {
 
     const response = await octokit.request(
         "GET /repos/{owner}/{repo}/contents/{path}",
-        config.whitelistedRepositoriesListLocation,
+        whitelistedRepositoriesListLocation,
     );
     const repositories = JSON.parse(Buffer.from(response.data.content, "base64").toString("utf8"));
 
@@ -36,6 +38,7 @@ const getRepositoryWhitelist = async (octokit, logger) => {
 };
 
 const parseRepository = (repository) => {
+    const { whitelistedRepositoriesListLocation } = config();
     const parts = repository.split("/");
 
     if (parts.length === 2) {
@@ -47,7 +50,7 @@ const parseRepository = (repository) => {
 
     // if the repo doesn't have an organization prefix, assume it's the org where the whitelist exists
     return {
-        owner: config.whitelistedRepositoriesListLocation.owner,
+        owner: whitelistedRepositoriesListLocation.owner,
         repo: repository,
     };
 };
