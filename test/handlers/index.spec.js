@@ -22,7 +22,7 @@ describe("handlers", () => {
             });
 
             // the handler function returns a function for the octokit webhook middleware to run
-            const handlerFunction = handlerObject.handler({logger: fakeLogger});
+            const handlerFunction = handlerObject.handler({ logger: fakeLogger });
 
             expect(handlerFunction).toEqual(expect.any(Function));
         }

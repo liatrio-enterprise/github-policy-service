@@ -16,10 +16,10 @@ module.exports = async (app, logger) => {
         const { events, handler } = require(path.join(__dirname, file));
         const handlerName = path.parse(file).name;
 
-        return app.webhooks.on(events, async (handlerArgs) => {
-            const { octokit, payload } = handlerArgs;
+        return app.webhooks.on(events, async (handlerArguments) => {
+            const { octokit, payload } = handlerArguments;
             const whitelistedRepositories = await getWhitelistedRepositories(octokit, logger.child({
-                name: "repository-whitelist"
+                name: "repository-whitelist",
             }));
 
             if (!whitelistedRepositories.includes(payload.repository.name)) {
@@ -27,7 +27,7 @@ module.exports = async (app, logger) => {
                     logger: logger.child({
                         name: handlerName,
                     }),
-                })(handlerArgs);
+                })(handlerArguments);
             }
         });
     }));
