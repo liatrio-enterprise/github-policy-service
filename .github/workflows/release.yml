@@ -45,4 +45,3 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.CR_PAT }}
         run: npx semantic-release
-
