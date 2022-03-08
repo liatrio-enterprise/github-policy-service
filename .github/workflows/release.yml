@@ -1,0 +1,48 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "src/**"
+      - "package.json"
+      - "yarn.lock"
+      - "Dockerfile"
+      - ".dockerignore"
+      - ".github/workflows/release.yml"
+      - ".releaserc.yaml"
+  workflow_dispatch: {}
+
+concurrency:
+  group: release
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.CR_PAT }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v2
+        with:
+          node-version: "16"
+
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git remote set-url origin https://git:${{ secrets.CR_PAT }}@github.com/${GITHUB_REPOSITORY}.git
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
+        run: npx semantic-release
+
