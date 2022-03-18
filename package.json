@@ -29,7 +29,7 @@
     "pino": "^7.8.0"
   },
   "devDependencies": {
-    "@liatrio/eslint-config": "^1.1.0",
+    "@liatrio/eslint-config": "^1.2.0",
     "@microsoft/eslint-formatter-sarif": "^2.1.7",
     "@semantic-release/git": "^10.0.1",
     "chance": "^1.1.8",
