@@ -11,7 +11,6 @@ module.exports = () => {
         const [owner, repo, ...path] = process.env.GITHUB_REPOSITORY_WHITELIST_LOCATION.split("/");
 
         if (!owner || !repo || !path || path.length === 0) {
-            // eslint-disable-next-line max-len
             throw new Error("expected GITHUB_REPOSITORY_WHITELIST_LOCATION environment variable to follow the pattern ORG/REPO/PATH_TO_JSON_FILE");
         }
 

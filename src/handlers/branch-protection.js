@@ -29,7 +29,8 @@ module.exports = {
                     allow_force_pushes: false,
                     allow_deletions: false,
                     required_conversation_resolution: true,
-                    restrictions: null, // eslint-disable-line unicorn/no-null
+                    // eslint-disable-next-line unicorn/no-null -- This has to be null so the attribute exists within the request payload that is sent to GitHub
+                    restrictions: null,
                 },
             );
         }

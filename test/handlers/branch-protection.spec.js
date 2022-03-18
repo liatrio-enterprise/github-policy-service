@@ -61,9 +61,8 @@ describe("branch protection", () => {
             allow_force_pushes: false,
             allow_deletions: false,
             required_conversation_resolution: true,
-            // null is specifically needed here. if this is undefined, the property isn't added to the JSON payload, and
-            // GitHub rejects the request
-            restrictions: null, // eslint-disable-line unicorn/no-null
+            // eslint-disable-next-line unicorn/no-null -- This has to be null so the attribute exists within the request payload that is sent to GitHub
+            restrictions: null,
         });
     });
 

@@ -16,9 +16,7 @@ const getLogger = () => {
     };
 
     if (process.env.NODE_ENV === "local") {
-        // eslint will get mad about this, because pino-pretty is a devDependency
-        // however, this code should only execute when running locally anyways
-        // eslint-disable-next-line node/no-unpublished-require
+        // eslint-disable-next-line node/no-unpublished-require -- While pino-pretty is only a devDependency, we're only loading it when running locally, so this is alright
         const pretty = require("pino-pretty");
 
         return pino({
@@ -49,7 +47,7 @@ const getAppPrivateKey = () => {
     }
 
     if (process.env.GITHUB_APP_PRIVATE_KEY_PATH) {
-        // eslint-disable-next-line security/detect-non-literal-fs-filename
+        // eslint-disable-next-line security/detect-non-literal-fs-filename -- This is fine as long as the environment variable is configured correctly
         return fs.readFileSync(process.env.GITHUB_APP_PRIVATE_KEY_PATH).toString();
     }
 

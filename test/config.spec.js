@@ -58,7 +58,6 @@ describe("config", () => {
             });
 
             it("should throw an error", () => {
-                // eslint-disable-next-line max-len
                 expect(config).toThrow("expected GITHUB_REPOSITORY_WHITELIST_LOCATION environment variable to follow the pattern ORG/REPO/PATH_TO_JSON_FILE");
             });
         });
