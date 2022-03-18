@@ -21,7 +21,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run Tests
-        run: yarn test && yarn lintsarif
+        run: yarn test && yarn lint-sarif
 
       - name: Upload ESLint results
         if: always()
