@@ -21,6 +21,7 @@ describe("handlers", () => {
             expect(handlerObject).toEqual({
                 events: expect.any(Array),
                 handler: expect.any(Function),
+                name: expect.any(String),
             });
 
             // the handler function returns a function for the octokit webhook middleware to run

@@ -1,7 +1,7 @@
 const fs = require("node:fs/promises");
 const path = require("node:path");
 
-const repositoryIsWhitelisted = require("../repository-whitelist");
+const { getConfigForOrg } = require("../config");
 
 module.exports = async (app, logger) => {
     // eslint-disable-next-line security/detect-non-literal-fs-filename
@@ -18,13 +18,22 @@ module.exports = async (app, logger) => {
 
         return app.webhooks.on(events, async (handlerArguments) => {
             const { octokit, payload } = handlerArguments;
+            const organization = payload.repository.owner.login;
+            const repository = payload.repository.name;
+            const config = await getConfigForOrg(logger, octokit, organization);
 
-            if (!await repositoryIsWhitelisted(octokit, logger, payload)) {
+            if (!config.repositoryWhitelist.includes(repository)) {
                 await handler({
                     logger: logger.child({
                         name: handlerName,
                     }),
+                    config,
                 })(handlerArguments);
+            } else {
+                logger.debug({
+                    organization,
+                    repository,
+                }, "Ignoring event for repository as it is whitelisted");
             }
         });
     }));

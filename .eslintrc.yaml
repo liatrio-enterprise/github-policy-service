@@ -7,6 +7,8 @@ extends:
   - "@liatrio/eslint-config"
 parserOptions:
   ecmaVersion: 11
+rules:
+  "security/detect-object-injection": off
 overrides:
   - files:
       - "**/*.spec.js"

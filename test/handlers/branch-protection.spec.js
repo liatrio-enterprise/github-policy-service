@@ -1,4 +1,5 @@
 const branchProtectionHandler = require("../../src/handlers/branch-protection");
+const defaultConfig = require("../../src/config/default");
 
 describe("branch protection", () => {
     let expectedOwner,
@@ -25,7 +26,7 @@ describe("branch protection", () => {
 
         fakeOctokit.request.mockResolvedValue();
 
-        handler = branchProtectionHandler.handler({ logger: fakeLogger });
+        handler = branchProtectionHandler.handler({ logger: fakeLogger, config: defaultConfig });
     });
 
     it("should update branch protection rules when repositories are created, or when branch protection rules are changed", () => {
@@ -44,27 +45,17 @@ describe("branch protection", () => {
             payload: expectedPayload,
         });
 
-        expect(fakeOctokit.request).toHaveBeenCalledWith("PUT /repos/{owner}/{repo}/branches/{branch}/protection", {
+        expect(fakeOctokit.request).toHaveBeenCalledWith("PUT /repos/{owner}/{repo}/branches/{branch}/protection", expect.any(Object));
+
+        // test the actual contents of the object
+        const requestObject = fakeOctokit.request.mock.calls[0][1];
+
+        expect(requestObject).toStrictEqual(expect.objectContaining(defaultConfig.branchProtection));
+        expect(requestObject).toStrictEqual(expect.objectContaining({
             owner: expectedOwner,
             repo: expectedRepo,
             branch: expectedBranch,
-            required_status_checks: {
-                contexts: [],
-                strict: true,
-            },
-            enforce_admins: true,
-            required_pull_request_reviews: {
-                dismiss_stale_reviews: true,
-                required_approving_review_count: 1,
-            },
-            required_linear_history: true,
-            allow_force_pushes: false,
-            allow_deletions: false,
-            required_conversation_resolution: true,
-            // null is specifically needed here. if this is undefined, the property isn't added to the JSON payload, and
-            // GitHub rejects the request
-            restrictions: null, // eslint-disable-line unicorn/no-null
-        });
+        }));
     });
 
     describe("when a bot is responsible for emitting the event", () => {
