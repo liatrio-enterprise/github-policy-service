@@ -26,7 +26,10 @@ describe("branch protection", () => {
 
         fakeOctokit.request.mockResolvedValue();
 
-        handler = branchProtectionHandler.handler({ logger: fakeLogger, config: defaultConfig });
+        handler = branchProtectionHandler.handler({
+            logger: fakeLogger,
+            config: defaultConfig,
+        });
     });
 
     it("should update branch protection rules when repositories are created, or when branch protection rules are changed", () => {
