@@ -21,3 +21,7 @@ overrides:
     rules:
       "node/no-unpublished-require": off
       max-len: off
+  - files:
+      - "src/config/default.js"
+    rules:
+      max-len: off
