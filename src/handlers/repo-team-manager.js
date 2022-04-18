@@ -1,4 +1,5 @@
 module.exports = {
+    name: "teamManager",
     events: [
         "repository.created",
         "repository.edited",
