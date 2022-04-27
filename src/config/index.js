@@ -53,4 +53,5 @@ const refreshConfigForOrg = async (logger, octokit, organization) => {
 
 module.exports = {
     getConfigForOrg,
+    refreshConfigForOrg,
 };
