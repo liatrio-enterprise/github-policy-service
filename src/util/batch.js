@@ -1,20 +1,21 @@
 const BATCH_SIZE = 5;
 
 const setBranchProtectionForAllRepositories = async (logger, octokit, organization, config) => {
-    const repositories = await octokit.paginate("GET /orgs/{organization}/repos", {
+    const allRepositories = await octokit.paginate("GET /orgs/{organization}/repos", {
         organization,
     });
 
-    const validRepositories = repositories.filter((repository) => !config.repositoryWhitelist.includes(repository.name));
+    const repositories = allRepositories.filter((repository) => !config.repositoryWhitelist.includes(repository.name));
 
-    for (let i = 0; i < validRepositories.length; i += BATCH_SIZE) {
-        const batchRepositories = validRepositories.slice(i, i + BATCH_SIZE);
-        const batchRepositoryNames = validRepositories.map((repository) => repository.name);
+    for (let index = 0; index < repositories.length; index += BATCH_SIZE) {
+        const batchRepositories = repositories.slice(index, index + BATCH_SIZE);
+        const batchRepositoryNames = repositories.map((repository) => repository.name);
 
         logger.debug({
             repositories: batchRepositoryNames,
-        }, "Enabling branch protection for repository batch")
+        }, "Enabling branch protection for repository batch");
 
+        // eslint-disable-next-line no-await-in-loop
         await Promise.all(batchRepositories.map((repository) => octokit.request(
             "PUT /repos/{owner}/{repo}/branches/{branch}/protection",
             {
