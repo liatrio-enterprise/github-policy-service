@@ -7,8 +7,8 @@ const setBranchProtectionForAllRepositories = async (logger, octokit, organizati
 
     const repositories = allRepositories.filter((repository) => !config.repositoryWhitelist.includes(repository.name));
 
-    for (let index = 0; index < repositories.length; index += BATCH_SIZE) {
-        const batchRepositories = repositories.slice(index, index + BATCH_SIZE);
+    for (let i = 0; i < repositories.length; i += BATCH_SIZE) {
+        const batchRepositories = repositories.slice(i, i + BATCH_SIZE);
         const batchRepositoryNames = repositories.map((repository) => repository.name);
 
         logger.debug({
