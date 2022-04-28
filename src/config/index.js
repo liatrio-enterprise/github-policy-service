@@ -1,3 +1,5 @@
+const merge = require("deepmerge");
+
 const defaultConfig = require("./default");
 
 const config = {};
@@ -34,21 +36,22 @@ const refreshConfigForOrg = async (logger, octokit, organization) => {
         const json = JSON.parse(Buffer.from(response.data.content, "base64").toString("utf8"));
 
         config[organization] = {
-            config: {
-                ...defaultConfig,
-                ...json,
-            },
+            config: merge(defaultConfig, json),
             expiration: getExpirationDateInMinutes(15),
         };
     } catch (error) {
-        logger.error({ error,
-            organization }, "Error refreshing config for organization, using default config");
+        logger.error({
+            error,
+            organization
+        }, "Error refreshing config for organization, using default config");
 
         config[organization] = {
             config: defaultConfig,
             expiration: getExpirationDateInMinutes(15),
         };
     }
+
+    return config[organization].config;
 };
 
 module.exports = {
