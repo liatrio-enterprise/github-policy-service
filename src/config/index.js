@@ -15,9 +15,7 @@ const getConfigForOrg = async (logger, octokit, organization) => {
         return config[organization].config;
     }
 
-    await refreshConfigForOrg(logger, octokit, organization);
-
-    return config[organization].config;
+    return refreshConfigForOrg(logger, octokit, organization);
 };
 
 const refreshConfigForOrg = async (logger, octokit, organization) => {
