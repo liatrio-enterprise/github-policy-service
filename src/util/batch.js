@@ -1,4 +1,4 @@
-const BATCH_SIZE = 5;
+const BATCH_SIZE = 15;
 
 const setBranchProtectionForAllRepositories = async (logger, octokit, organization, config) => {
     const allRepositories = await octokit.paginate("GET /orgs/{organization}/repos", {
