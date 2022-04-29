@@ -4,6 +4,9 @@
   "description": "",
   "main": "src/app.js",
   "private": true,
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "lint": "eslint .",
     "lintfix": "eslint --fix .",

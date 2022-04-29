@@ -27,8 +27,8 @@ const setBranchProtectionForAllRepositories = async (logger, octokit, organizati
         )));
 
         logger.debug({
-            results
-        }, "Results for branch protection")
+            results,
+        }, "Results for branch protection");
     }
 };
 

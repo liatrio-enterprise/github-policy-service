@@ -42,7 +42,7 @@ const refreshConfigForOrg = async (logger, octokit, organization) => {
     } catch (error) {
         logger.error({
             error,
-            organization
+            organization,
         }, "Error refreshing config for organization, using default config");
 
         config[organization] = {

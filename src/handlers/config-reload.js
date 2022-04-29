@@ -8,11 +8,12 @@ module.exports = {
     ],
     handler: ({ logger }) => async ({ octokit, payload }) => {
         const mainBranchReference = `refs/heads/${payload.repository.default_branch}`;
+        const organization = payload.repository.owner.login;
 
         if (payload.repository.name === ".github" && payload.ref === mainBranchReference) {
-            const refreshedConfig = await refreshConfigForOrg(logger, octokit, payload.repository.owner.login);
+            const refreshedConfig = await refreshConfigForOrg(logger, octokit, organization);
 
-            await setBranchProtectionForAllRepositories(logger, octokit, payload.repository.owner.login, refreshedConfig);
+            await setBranchProtectionForAllRepositories(logger, octokit, organization, refreshedConfig);
         }
     },
 };
