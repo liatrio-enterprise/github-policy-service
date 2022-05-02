@@ -22,7 +22,7 @@ module.exports = async (app, logger) => {
             const repository = payload.repository.name;
             const config = await getConfigForOrg(logger, octokit, organization);
 
-            if (!config.repositoryWhitelist.includes(repository)) {
+            if (!config.repositoryWhitelist.includes(repository) || handlerName === "config-reload") {
                 await handler({
                     logger: logger.child({
                         name: handlerName,

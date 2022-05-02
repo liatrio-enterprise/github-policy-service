@@ -1,4 +1,7 @@
 const { App, createNodeMiddleware } = require("@octokit/app");
+const { paginateRest } = require("@octokit/plugin-paginate-rest");
+const { Octokit } = require("@octokit/core");
+
 const express = require("express");
 const fs = require("node:fs");
 
@@ -66,6 +69,7 @@ const app = new App({
     webhooks: {
         secret: process.env.WEBHOOK_SECRET,
     },
+    Octokit: Octokit.plugin(paginateRest),
 });
 
 (async () => {

@@ -9,6 +9,7 @@ parserOptions:
   ecmaVersion: 11
 rules:
   "security/detect-object-injection": off
+  "unicorn/prevent-abbreviations": off
 overrides:
   - files:
       - "**/*.spec.js"

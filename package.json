@@ -4,6 +4,9 @@
   "description": "",
   "main": "src/app.js",
   "private": true,
+  "engines": {
+    "node": ">=16"
+  },
   "scripts": {
     "lint": "eslint .",
     "lintfix": "eslint --fix .",
@@ -21,7 +24,10 @@
   "homepage": "https://github.com/liatrio-enterprise/github-policy-service#readme",
   "dependencies": {
     "@octokit/app": "^12.0.5",
+    "@octokit/core": "^3.6.0",
+    "@octokit/plugin-paginate-rest": "^2.17.0",
     "@octokit/rest": "^18.12.0",
+    "deepmerge": "^4.2.2",
     "dotenv": "^14.2.0",
     "express": "^4.17.2",
     "express-pino-logger": "^7.0.0",
@@ -30,8 +36,8 @@
   "devDependencies": {
     "@liatrio/eslint-config": "^1.1.0",
     "@semantic-release/git": "^10.0.1",
-    "conventional-changelog-conventionalcommits": "^4.6.1",
     "chance": "^1.1.8",
+    "conventional-changelog-conventionalcommits": "^4.6.1",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",
     "jest-extended": "^2.0.0",
