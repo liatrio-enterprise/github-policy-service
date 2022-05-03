@@ -38,7 +38,7 @@
     "@semantic-release/git": "^10.0.1",
     "chance": "^1.1.8",
     "conventional-changelog-conventionalcommits": "^4.6.1",
-    "eslint": "^8.9.0",
+    "eslint": "^8.14.0",
     "jest": "^28.0.3",
     "jest-extended": "^2.0.0",
     "jest-when": "^3.5.1",
