@@ -28,7 +28,7 @@
     "@octokit/plugin-paginate-rest": "^2.17.0",
     "@octokit/rest": "^18.12.0",
     "deepmerge": "^4.2.2",
-    "dotenv": "^14.2.0",
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "express-pino-logger": "^7.0.0",
     "pino": "^7.11.0"
