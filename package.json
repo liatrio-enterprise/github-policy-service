@@ -42,7 +42,7 @@
     "jest": "^28.1.0",
     "jest-extended": "^2.0.0",
     "jest-when": "^3.5.1",
-    "pino-pretty": "^7.6.1",
+    "pino-pretty": "^8.1.0",
     "semantic-release": "^19.0.3"
   },
   "jest": {
