@@ -1,10 +1,10 @@
-on:
-  push:
-    paths-ignore:
-      - "**/*.md"
-    branches:
-      - main
-  workflow_dispatch:
+# on:
+#   push:
+#     paths-ignore:
+#       - "**/*.md"
+#     branches:
+#       - main
+#   workflow_dispatch:
 
 name: Terraform Apply
 

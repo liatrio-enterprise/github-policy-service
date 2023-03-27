@@ -1,12 +1,12 @@
-on:
-  pull_request:
-    paths:
-      - "tf/**"
-    branches:
-      - main
-  workflow_dispatch:
+# on:
+#   pull_request:
+#     paths:
+#       - "tf/**"
+#     branches:
+#       - main
+#   workflow_dispatch:
 
-name: Terraform Plan
+# name: Terraform Plan
 
 concurrency:
   group: github-org-protection-service-terraform
