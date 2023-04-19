@@ -1,3 +1,7 @@
+>NOTE: This project has been archived and is no longer maintained.
+>
+>We recommend `safe-settings` since it is maintained by GitHub: https://github.com/github/safe-settings
+
 # GitHub Policy Service
 
 ![CodeQL](https://github.com/liatrio-enterprise/github-policy-service/actions/workflows/codeql-analysis.yml/badge.svg)

@@ -1,7 +1,7 @@
-on:
-  release:
-    types:
-      - published
+# on:
+#   release:
+#     types:
+#       - published
 
 env:
   IMAGE_NAME: ghcr.io/liatrio-enterprise/github-policy-service

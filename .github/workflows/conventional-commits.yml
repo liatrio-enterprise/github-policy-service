@@ -1,11 +1,11 @@
 name: Conventional Commits
 
-on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
+# on:
+#   pull_request:
+#     types:
+#       - opened
+#       - edited
+#       - synchronize
 
 jobs:
   validate:
